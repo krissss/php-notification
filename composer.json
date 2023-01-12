@@ -1,0 +1,48 @@
+{
+  "name": "kriss/php-notification",
+  "description": "PHP Notification",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "kriss",
+      "email": "462679766@qq.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.4",
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "psr/container": "^1.0|^2.0",
+    "psr/http-client": "^1.0",
+    "psr/log": "^1.1",
+    "psr/simple-cache": "^1.0"
+  },
+  "require-dev": {
+    "guzzlehttp/guzzle": "^7.5",
+    "illuminate/container": "^8.83",
+    "illuminate/support": "^8.83",
+    "monolog/monolog": "^2.8",
+    "symfony/cache": "^5.4",
+    "workerman/webman-framework": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kriss\\Notification\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kriss\\Notification\\Integrations\\Laravel\\NotificationServiceProvider"
+      ],
+      "aliases": {
+        "Notification": "Kriss\\Notification\\Integrations\\Laravel\\Facade"
+      }
+    }
+  }
+}
