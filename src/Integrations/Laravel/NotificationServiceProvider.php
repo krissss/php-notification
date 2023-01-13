@@ -12,9 +12,9 @@ class NotificationServiceProvider extends ServiceProvider implements DeferrableP
     {
         $configPath = __DIR__ . '/../../../config/notification.php';
         if (function_exists('config_path')) {
-            $publishPath = config_path('notification.php');
+            $publishPath = config_path('php-notification.php');
         } else {
-            $publishPath = base_path('config/notification.php');
+            $publishPath = base_path('config/php-notification.php');
         }
         $this->publishes([$configPath => $publishPath], 'config');
     }
@@ -22,14 +22,14 @@ class NotificationServiceProvider extends ServiceProvider implements DeferrableP
     public function register()
     {
         $this->app->singleton(Factory::class, fn() => Notification::instance());
-        $this->app->alias(Factory::class, 'notification');
+        $this->app->alias(Factory::class, 'php-notification');
     }
 
     public function provides()
     {
         return [
             Factory::class,
-            'notification',
+            'php-notification',
         ];
     }
 }

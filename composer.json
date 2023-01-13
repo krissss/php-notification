@@ -42,7 +42,7 @@
         "Kriss\\Notification\\Integrations\\Laravel\\NotificationServiceProvider"
       ],
       "aliases": {
-        "Notification": "Kriss\\Notification\\Integrations\\Laravel\\Facade"
+        "PhpNotification": "Kriss\\Notification\\Integrations\\Laravel\\Facade"
       }
     }
   }

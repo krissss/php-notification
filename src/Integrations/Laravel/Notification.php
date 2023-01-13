@@ -12,7 +12,7 @@ class Notification extends \Kriss\Notification\Integrations\PHP\Notification
 {
     protected static function getLocalConfig(): array
     {
-        return Config::get('notification', []);
+        return Config::get('php-notification', []);
     }
 
     protected static function getDefaultLogger(?string $channel): LoggerInterface
