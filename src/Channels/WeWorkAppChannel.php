@@ -13,10 +13,13 @@ use Kriss\Notification\Services\HttpClient;
 final class WeWorkAppChannel extends BaseChannel
 {
     protected array $config = [
-        'corpid' => '',
-        'corpsecret' => '',
-        'agentid' => '',
-        'access_token_cache_key' => '',
+        'corpid' => '', // 企业 id
+        'corpsecret' => '', // 应用 secret
+        'agentid' => 0, // 企业应用的id，整型
+        'touser' => null, // 指定接收消息的成员，成员ID列表（多个接收者用‘|’分隔，最多支持1000个）
+        'toparty' => null, // 指定接收消息的部门，部门ID列表，多个接收者用‘|’分隔，最多支持100个
+        'totag' => null, //	指定接收消息的标签，标签ID列表，多个接收者用‘|’分隔，最多支持100个
+        'access_token_cache_key' => null, // 缓存 key 中的一部分
     ];
     private HttpClient $httpClient;
     private Cache $cache;
@@ -27,22 +30,22 @@ final class WeWorkAppChannel extends BaseChannel
         $this->cache = $cache;
     }
 
-    public function sendText(string $content, ?string $toUser, array $params = []): bool
+    public function sendText(string $content, array $config = []): bool
     {
         $params = array_replace_recursive(
             [
-                'touser' => $toUser,
-                'toparty' => null,
-                'totag' => null,
+                'touser' => $this->config['touser'],
+                'toparty' => $this->config['toparty'],
+                'totag' => $this->config['totag'],
                 'safe' => null,
                 'enable_id_trans' => null,
                 'enable_duplicate_check' => null,
                 'duplicate_check_interval' => null,
             ],
-            $params,
+            $config,
             [
                 'msgtype' => 'text',
-                'agentid' => $this->config['agentid'],
+                'agentid' => (int)$this->config['agentid'],
                 'text' => [
                     'content' => $content,
                 ],
@@ -52,20 +55,20 @@ final class WeWorkAppChannel extends BaseChannel
         return $this->send($params);
     }
 
-    public function sendMarkdown(string $content, ?string $toUser, array $params = []): bool
+    public function sendMarkdown(string $content, array $config = []): bool
     {
         $params = array_replace_recursive(
             [
-                'touser' => $toUser,
-                'toparty' => null,
-                'totag' => null,
+                'touser' => $this->config['touser'],
+                'toparty' => $this->config['toparty'],
+                'totag' => $this->config['totag'],
                 'enable_duplicate_check' => null,
                 'duplicate_check_interval' => null,
             ],
-            $params,
+            $config,
             [
                 'msgtype' => 'markdown',
-                'agentid' => $this->config['agentid'],
+                'agentid' => (int)$this->config['agentid'],
                 'markdown' => [
                     'content' => $content,
                 ],
@@ -77,7 +80,10 @@ final class WeWorkAppChannel extends BaseChannel
 
     private function send(array $params): bool
     {
-        $data = $this->httpClient->requestPostJson("https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$this->getAccessToken()}", $params);
+        $data = $this->httpClient->requestPostJson(
+            "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$this->getAccessToken()}",
+            array_filter($params)
+        );
         return $data['errcode'] === 0;
     }
 

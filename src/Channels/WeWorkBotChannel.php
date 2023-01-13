@@ -11,7 +11,9 @@ use Kriss\Notification\Services\HttpClient;
 class WeWorkBotChannel extends BaseChannel
 {
     protected array $config = [
-        'key' => '',
+        'key' => '', // webhook 的 key
+        'mentioned_list' => [], // @userid
+        'mentioned_mobile_list' => [], // @mobile
     ];
     private HttpClient $httpClient;
 
@@ -23,8 +25,8 @@ class WeWorkBotChannel extends BaseChannel
     public function sendText(string $content, array $config = []): bool
     {
         $config = array_merge([
-            'mentioned_list' => [],
-            'mentioned_mobile_list' => [],
+            'mentioned_list' => (array)$this->config['mentioned_list'],
+            'mentioned_mobile_list' => (array)$this->config['mentioned_mobile_list'],
         ], $config);
 
         $params = [
@@ -43,19 +45,34 @@ class WeWorkBotChannel extends BaseChannel
         return $this->send($params);
     }
 
-    public function sendMarkdown(string $content): bool
+    public function sendMarkdown(string $content, array $config = []): bool
     {
-        return $this->send([
+        $config = array_merge([
+            'mentioned_list' => (array)$this->config['mentioned_list'],
+        ], $config);
+
+        if ($config['mentioned_list']) {
+            $content = implode('', array_map(fn(string $userid) => "<@{$userid}>", $config['mentioned_list']))
+                . "\n"
+                . $content;
+        }
+
+        $params = [
             'msgtype' => 'markdown',
             'markdown' => [
                 'content' => $content,
             ],
-        ]);
+        ];
+
+        return $this->send($params);
     }
 
     private function send(array $params): bool
     {
-        $data = $this->httpClient->requestPostJson("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->config['key']}", $params);
+        $data = $this->httpClient->requestPostJson(
+            "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->config['key']}",
+            array_filter($params)
+        );
         return $data['errcode'] === 0;
     }
 }
