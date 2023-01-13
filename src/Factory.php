@@ -4,6 +4,7 @@ namespace Kriss\Notification;
 
 use Closure;
 use Kriss\Notification\Channels\BaseChannel;
+use Kriss\Notification\Services\Logger;
 use Throwable;
 
 final class Factory
@@ -39,6 +40,7 @@ final class Factory
         if ($this->config['exception']['throw']) {
             throw $e;
         }
+        $this->container->get(Logger::class)->error($e);
     }
 
     private function createChannel(array $config): BaseChannel

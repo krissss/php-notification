@@ -20,6 +20,11 @@ final class Logger
         $this->log('info', $message, $context);
     }
 
+    public function error($message, array $context = []): void
+    {
+        $this->log('error', $message, $context);
+    }
+
     public function log($level, $message, array $context = []): void
     {
         if ($this->logger instanceof NullLogger) {
