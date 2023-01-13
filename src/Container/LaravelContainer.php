@@ -4,7 +4,7 @@ namespace Kriss\Notification\Container;
 
 use Illuminate\Container\Container;
 
-class LaravelContainer implements ContainerInterface
+final class LaravelContainer implements ContainerInterface
 {
     private Container $container;
 
@@ -24,7 +24,7 @@ class LaravelContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function get(string $id)
+    public function get($id)
     {
         return $this->container->get($id);
     }
@@ -32,7 +32,7 @@ class LaravelContainer implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function has(string $id)
+    public function has($id)
     {
         return $this->container->has($id);
     }
