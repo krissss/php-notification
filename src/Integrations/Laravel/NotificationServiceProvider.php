@@ -2,12 +2,16 @@
 
 namespace Kriss\Notification\Integrations\Laravel;
 
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Kriss\Notification\Factory;
 
-class NotificationServiceProvider extends ServiceProvider implements DeferrableProvider
+class NotificationServiceProvider extends ServiceProvider
 {
+    public function isDeferred()
+    {
+        return true;
+    }
+
     public function boot()
     {
         $configPath = __DIR__ . '/../../../config/notification.php';
