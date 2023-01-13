@@ -18,9 +18,10 @@ class MailerChannel extends BaseChannel
         'to' => '',
         'cc' => '',
         'bcc' => '',
+        'subject' => '', // 默认的标题
     ];
 
-    public function sendText(string $subject, string $text): bool
+    public function sendText(string $text, string $subject = ''): bool
     {
         $email = (new Email())
             ->subject($subject)
@@ -28,7 +29,7 @@ class MailerChannel extends BaseChannel
         return $this->send($email);
     }
 
-    public function sendHtml(string $subject, string $html): bool
+    public function sendHtml(string $html, string $subject = ''): bool
     {
         $email = (new Email())
             ->subject($subject)
@@ -38,17 +39,20 @@ class MailerChannel extends BaseChannel
 
     public function send(Email $email): bool
     {
-        if (!$email->getFrom()) {
+        if (!$email->getFrom() && $this->config['from']) {
             $email->from($this->config['from']);
         }
-        if (!$email->getTo()) {
+        if (!$email->getTo() && $this->config['to']) {
             $email->to($this->config['to']);
         }
-        if ($email->getCc()) {
+        if (!$email->getCc() && $this->config['cc']) {
             $email->cc($this->config['cc']);
         }
-        if ($email->getBcc()) {
+        if (!$email->getBcc() && $this->config['bcc']) {
             $email->bcc($this->config['bcc']);
+        }
+        if (!$email->getSubject() && $this->config['subject']) {
+            $email->subject($this->config['subject']);
         }
 
         $mailer = new Mailer(Transport::fromDsn($this->config['dsn']));
