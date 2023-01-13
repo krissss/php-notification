@@ -2,7 +2,9 @@
 
 namespace Kriss\Notification;
 
+use Closure;
 use Kriss\Notification\Channels\BaseChannel;
+use Throwable;
 
 final class Factory
 {
@@ -28,6 +30,17 @@ final class Factory
         return $this->channels[$name] = $this->createChannel($this->config['channels'][$name]);
     }
 
+    public function handleException(Throwable $e): void
+    {
+        if ($this->config['exception']['handler'] instanceof Closure) {
+            call_user_func($this->config['exception']['handler'], $e);
+            return;
+        }
+        if ($this->config['exception']['throw']) {
+            throw $e;
+        }
+    }
+
     private function createChannel(array $config): BaseChannel
     {
         if (!isset($config['class'])) {
@@ -39,6 +52,8 @@ final class Factory
         if (!$obj instanceof BaseChannel) {
             throw new \InvalidArgumentException('必须是 BaseChannel');
         }
-        return $obj->withConfig($config);
+        return $obj
+            ->withConfig($config)
+            ->withFactory($this);
     }
 }

@@ -46,7 +46,7 @@ final class HttpClient
         $response = $this->sendRequest(
             $this->requestFactory->createRequest('GET', $url)
         );
-        return json_decode($response->getBody(), true);
+        return JsonHelper::decode($response->getBody());
     }
 
     private function sendRequest(RequestInterface $request): ResponseInterface

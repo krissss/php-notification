@@ -69,10 +69,12 @@ class WeWorkBotChannel extends BaseChannel
 
     private function send(array $params): bool
     {
-        $data = $this->httpClient->requestPostJson(
-            "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->config['key']}",
-            array_filter($params)
-        );
-        return $data['errcode'] === 0;
+        return $this->wrapSendCallback(function () use ($params) {
+            $data = $this->httpClient->requestPostJson(
+                "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->config['key']}",
+                array_filter($params)
+            );
+            return $data['errcode'] === 0;
+        });
     }
 }

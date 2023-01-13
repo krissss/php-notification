@@ -80,11 +80,13 @@ final class WeWorkAppChannel extends BaseChannel
 
     private function send(array $params): bool
     {
-        $data = $this->httpClient->requestPostJson(
-            "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$this->getAccessToken()}",
-            array_filter($params)
-        );
-        return $data['errcode'] === 0;
+        return $this->wrapSendCallback(function () use ($params) {
+            $data = $this->httpClient->requestPostJson(
+                "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$this->getAccessToken()}",
+                array_filter($params)
+            );
+            return $data['errcode'] === 0;
+        });
     }
 
     /**

@@ -62,8 +62,10 @@ class MailerChannel extends BaseChannel
             $email->subject($this->config['subject']);
         }
 
-        $mailer = new Mailer(Transport::fromDsn($this->config['dsn']));
-        $mailer->send($email);
-        return true;
+        return $this->wrapSendCallback(function () use ($email) {
+            $mailer = new Mailer(Transport::fromDsn($this->config['dsn']));
+            $mailer->send($email);
+            return true;
+        });
     }
 }
