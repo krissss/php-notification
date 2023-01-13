@@ -21,6 +21,13 @@ class MailerChannel extends BaseChannel
         'subject' => '', // 默认的标题
     ];
 
+    public function __construct()
+    {
+        if (!class_exists(Mailer::class)) {
+            throw new \InvalidArgumentException('请先安装 `symfony/mailer`');
+        }
+    }
+
     public function sendText(string $text, string $subject = ''): bool
     {
         $email = (new Email())

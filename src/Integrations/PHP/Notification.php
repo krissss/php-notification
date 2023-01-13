@@ -61,12 +61,12 @@ class Notification
 
     protected static function getDefaultLogger(?string $channel): LoggerInterface
     {
-        throw new \InvalidArgumentException('不支持');
+        throw new \InvalidArgumentException('请提供默认的 LoggerInterface 实现');
     }
 
     protected static function getDefaultCache(?string $driver): CacheInterface
     {
-        throw new \InvalidArgumentException('不支持');
+        throw new \InvalidArgumentException('请提供默认的 CacheInterface 实现');
     }
 
     public static function __callStatic($name, $arguments)
