@@ -2,10 +2,14 @@
 
 namespace Kriss\Notification;
 
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Kriss\Notification\Container\ContainerInterface;
 use Kriss\Notification\Container\LaravelContainer;
-use Kriss\Notification\Helper\GuzzleHttpClientHelper;
 use Psr\Container\ContainerInterface as PSRContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * @mixin ContainerInterface
@@ -30,11 +34,24 @@ final class Container
         }
         $this->container = $container;
 
-        GuzzleHttpClientHelper::register($container);
+        $this->discoverHttpClient();
     }
 
     public function __call($name, $arguments)
     {
         return $this->container->{$name}(...$arguments);
+    }
+
+    private function discoverHttpClient()
+    {
+        if (!$this->container->has(ClientInterface::class)) {
+            $this->container->singleton(ClientInterface::class, fn() => Psr18ClientDiscovery::find());
+        }
+        if (!$this->container->has(RequestFactoryInterface::class)) {
+            $this->container->singleton(RequestFactoryInterface::class, fn() => Psr17FactoryDiscovery::findRequestFactory());
+        }
+        if (!$this->container->has(StreamFactoryInterface::class)) {
+            $this->container->singleton(StreamFactoryInterface::class, fn() => Psr17FactoryDiscovery::findStreamFactory());
+        }
     }
 }

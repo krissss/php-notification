@@ -12,10 +12,12 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.4",
-    "ext-mbstring": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
+    "php-http/discovery": "^1.14",
     "psr/container": "^1.0|^2.0",
     "psr/http-client": "^1.0",
+    "psr/http-factory": "^1.0",
     "psr/log": "^1.1",
     "psr/simple-cache": "^1.0"
   },
@@ -25,6 +27,7 @@
     "illuminate/support": "^8.83",
     "monolog/monolog": "^2.8",
     "symfony/cache": "^5.4",
+    "symfony/http-client": "^5.4",
     "symfony/mailer": "^5.4",
     "workerman/webman-framework": "^1.4"
   },
