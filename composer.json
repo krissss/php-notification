@@ -25,6 +25,7 @@
     "illuminate/support": "^8.83",
     "monolog/monolog": "^2.8",
     "symfony/cache": "^5.4",
+    "symfony/mailer": "^5.4",
     "workerman/webman-framework": "^1.4"
   },
   "autoload": {
