@@ -13,6 +13,10 @@ final class Factory
     private array $config = [
         'default' => 'default',
         'channels' => [],
+        'exception' => [
+            'handler' => null,
+            'throw' => true,
+        ],
     ];
     private array $channels = [];
 
