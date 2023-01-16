@@ -22,6 +22,11 @@ final class Factory
         $this->config = array_merge($this->config, $config);
     }
 
+    public function getContainer(): Container
+    {
+        return $this->container;
+    }
+
     public function channel(string $name = null): BaseChannel
     {
         $name = $name ?? $this->config['default'];

@@ -18,8 +18,8 @@ final class Cache
         $this->cache->set($key, $value, $ttl);
     }
 
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
-        return $this->cache->get($key);
+        return $this->cache->get($key, $default);
     }
 }
