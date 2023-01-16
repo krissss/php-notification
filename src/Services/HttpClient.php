@@ -29,24 +29,22 @@ final class HttpClient
         $this->logger = $logger;
     }
 
-    public function requestPostJson(string $url, array $jsonData): array
+    public function requestPostJson(string $url, array $jsonData): ResponseInterface
     {
-        $response = $this->sendRequest(
+        return $this->sendRequest(
             $this->requestFactory->createRequest('POST', $url)
                 ->withHeader('Content-Type', 'application/json')
                 ->withBody(
                     $this->streamFactory->createStream(JsonHelper::encode($jsonData))
                 )
         );
-        return JsonHelper::decode($response->getBody());
     }
 
-    public function requestGet(string $url): array
+    public function requestGet(string $url): ResponseInterface
     {
-        $response = $this->sendRequest(
+        return $this->sendRequest(
             $this->requestFactory->createRequest('GET', $url)
         );
-        return JsonHelper::decode($response->getBody());
     }
 
     private function sendRequest(RequestInterface $request): ResponseInterface

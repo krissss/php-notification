@@ -22,7 +22,7 @@ class WeWorkBotChannel extends BaseChannel
         $this->httpClient = $httpClient;
     }
 
-    public function sendText(string $content, array $config = []): bool
+    public function sendText(string $content, array $config = [])
     {
         $config = array_merge([
             'mentioned_list' => (array)$this->config['mentioned_list'],
@@ -45,7 +45,7 @@ class WeWorkBotChannel extends BaseChannel
         return $this->send($params);
     }
 
-    public function sendMarkdown(string $content, array $config = []): bool
+    public function sendMarkdown(string $content, array $config = [])
     {
         $config = array_merge([
             'mentioned_list' => (array)$this->config['mentioned_list'],
@@ -67,14 +67,13 @@ class WeWorkBotChannel extends BaseChannel
         return $this->send($params);
     }
 
-    private function send(array $params): bool
+    private function send(array $params)
     {
         return $this->wrapSendCallback(function () use ($params) {
-            $data = $this->httpClient->requestPostJson(
+            return $this->httpClient->requestPostJson(
                 "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={$this->config['key']}",
                 array_filter($params)
             );
-            return $data['errcode'] === 0;
         });
     }
 }

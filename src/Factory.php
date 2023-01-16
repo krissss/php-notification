@@ -36,16 +36,17 @@ final class Factory
         return $this->channels[$name] = $this->createChannel($this->config['channels'][$name]);
     }
 
-    public function handleException(Throwable $e): void
+    public function handleException(Throwable $e): ?Throwable
     {
         if ($this->config['exception']['handler'] instanceof Closure) {
             call_user_func($this->config['exception']['handler'], $e);
-            return;
+            return null;
         }
         if ($this->config['exception']['throw']) {
             throw $e;
         }
         $this->container->get(Logger::class)->error($e);
+        return $e;
     }
 
     private function createChannel(array $config): BaseChannel

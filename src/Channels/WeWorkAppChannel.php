@@ -3,6 +3,7 @@
 namespace Kriss\Notification\Channels;
 
 use Kriss\Notification\Exceptions\AccessTokenGetException;
+use Kriss\Notification\Helper\JsonHelper;
 use Kriss\Notification\Services\Cache;
 use Kriss\Notification\Services\HttpClient;
 
@@ -30,7 +31,7 @@ final class WeWorkAppChannel extends BaseChannel
         $this->cache = $cache;
     }
 
-    public function sendText(string $content, array $config = []): bool
+    public function sendText(string $content, array $config = [])
     {
         $params = array_replace_recursive(
             [
@@ -55,7 +56,7 @@ final class WeWorkAppChannel extends BaseChannel
         return $this->send($params);
     }
 
-    public function sendMarkdown(string $content, array $config = []): bool
+    public function sendMarkdown(string $content, array $config = [])
     {
         $params = array_replace_recursive(
             [
@@ -78,14 +79,13 @@ final class WeWorkAppChannel extends BaseChannel
         return $this->send($params);
     }
 
-    private function send(array $params): bool
+    private function send(array $params)
     {
         return $this->wrapSendCallback(function () use ($params) {
-            $data = $this->httpClient->requestPostJson(
+            return $this->httpClient->requestPostJson(
                 "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={$this->getAccessToken()}",
                 array_filter($params)
             );
-            return $data['errcode'] === 0;
         });
     }
 
@@ -101,7 +101,8 @@ final class WeWorkAppChannel extends BaseChannel
 
         $accessToken = $cache->get($cacheKey);
         if (!$accessToken) {
-            $data = $this->httpClient->requestGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={$this->config['corpid']}&corpsecret={$this->config['corpsecret']}");
+            $response = $this->httpClient->requestGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={$this->config['corpid']}&corpsecret={$this->config['corpsecret']}");
+            $data = JsonHelper::decode($response->getBody());
             if ($data['errcode'] !== 0) {
                 throw new AccessTokenGetException($data['errmsg']);
             }

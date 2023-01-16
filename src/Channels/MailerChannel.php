@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Email;
  * 邮件
  * https://symfony.com/doc/current/mailer.html
  */
-class MailerChannel extends BaseChannel
+final class MailerChannel extends BaseChannel
 {
     protected array $config = [
         'dsn' => '', // smtp://username:password@smtp.xxx.com:465
@@ -28,7 +28,7 @@ class MailerChannel extends BaseChannel
         }
     }
 
-    public function sendText(string $text, string $subject = ''): bool
+    public function sendText(string $text, string $subject = '')
     {
         $email = (new Email())
             ->subject($subject)
@@ -36,7 +36,7 @@ class MailerChannel extends BaseChannel
         return $this->send($email);
     }
 
-    public function sendHtml(string $html, string $subject = ''): bool
+    public function sendHtml(string $html, string $subject = '')
     {
         $email = (new Email())
             ->subject($subject)
@@ -44,7 +44,7 @@ class MailerChannel extends BaseChannel
         return $this->send($email);
     }
 
-    public function send(Email $email): bool
+    public function send(Email $email)
     {
         if (!$email->getFrom() && $this->config['from']) {
             $email->from($this->config['from']);
@@ -65,7 +65,6 @@ class MailerChannel extends BaseChannel
         return $this->wrapSendCallback(function () use ($email) {
             $mailer = new Mailer(Transport::fromDsn($this->config['dsn']));
             $mailer->send($email);
-            return true;
         });
     }
 }

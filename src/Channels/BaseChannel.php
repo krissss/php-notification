@@ -3,6 +3,7 @@
 namespace Kriss\Notification\Channels;
 
 use Closure;
+use Kriss\Notification\Exceptions\RateLimitReachException;
 use Kriss\Notification\Factory;
 use Kriss\Notification\Services\RateLimiter;
 use Throwable;
@@ -36,21 +37,19 @@ abstract class BaseChannel
         return $this;
     }
 
-    final protected function wrapSendCallback(Closure $send, $failedResult = false)
+    final protected function wrapSendCallback(Closure $send)
     {
         if ($this->rateLimiter && !$this->rateLimiter->attempt()) {
-            return $failedResult;
+            return new RateLimitReachException();
         }
 
         try {
             return call_user_func($send);
         } catch (Throwable $e) {
             if ($this->factory) {
-                $this->factory->handleException($e);
-            } else {
-                throw $e;
+                return $this->factory->handleException($e);
             }
-            return $failedResult;
+            throw $e;
         }
     }
 }
