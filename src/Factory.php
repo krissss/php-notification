@@ -39,8 +39,7 @@ final class Factory
     public function handleException(Throwable $e): ?Throwable
     {
         if ($this->config['exception']['handler'] instanceof Closure) {
-            call_user_func($this->config['exception']['handler'], $e);
-            return null;
+            return call_user_func($this->config['exception']['handler'], $e);
         }
         if ($this->config['exception']['throw']) {
             throw $e;
