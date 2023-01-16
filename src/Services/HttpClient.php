@@ -49,7 +49,7 @@ final class HttpClient
 
     private function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $this->logger->info(fn() => [
+        $this->logger->debug(fn() => [
             'type' => 'request',
             'url' => (string)$request->getUri(),
             'method' => $request->getMethod(),
@@ -60,7 +60,7 @@ final class HttpClient
         $start = microtime(true);
         $response = $this->httpClient->sendRequest($request);
 
-        $this->logger->info(fn() => [
+        $this->logger->debug(fn() => [
             'type' => 'response',
             'ts' => round(microtime(true) - $start, 6),
             'status' => $response->getStatusCode(),

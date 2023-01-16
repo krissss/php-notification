@@ -15,9 +15,9 @@ final class Logger
         $this->logger = $logger;
     }
 
-    public function info($message, array $context = []): void
+    public function debug($message, array $context = []): void
     {
-        $this->log('info', $message, $context);
+        $this->log('debug', $message, $context);
     }
 
     public function error($message, array $context = []): void
