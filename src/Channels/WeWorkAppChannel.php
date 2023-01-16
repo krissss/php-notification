@@ -26,6 +26,8 @@ final class WeWorkAppChannel extends BaseChannel
 
     public function __construct(HttpClient $httpClient, Cache $cache)
     {
+        parent::__construct();
+
         $this->httpClient = $httpClient;
         $this->cache = $cache;
     }

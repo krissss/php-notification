@@ -19,6 +19,8 @@ class WeWorkBotChannel extends BaseChannel
 
     public function __construct(HttpClient $httpClient)
     {
+        parent::__construct();
+
         $this->httpClient = $httpClient;
     }
 

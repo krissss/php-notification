@@ -23,6 +23,8 @@ final class MailerChannel extends BaseChannel
 
     public function __construct()
     {
+        parent::__construct();
+
         if (!class_exists(Mailer::class)) {
             throw new \InvalidArgumentException('请先安装 `symfony/mailer`');
         }
