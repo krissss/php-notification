@@ -20,7 +20,6 @@ final class WeWorkAppChannel extends BaseChannel
         'touser' => null, // 指定接收消息的成员，成员ID列表（多个接收者用‘|’分隔，最多支持1000个）
         'toparty' => null, // 指定接收消息的部门，部门ID列表，多个接收者用‘|’分隔，最多支持100个
         'totag' => null, //	指定接收消息的标签，标签ID列表，多个接收者用‘|’分隔，最多支持100个
-        'access_token_cache_key' => null, // 缓存 key 中的一部分
     ];
     private HttpClient $httpClient;
     private Cache $cache;
@@ -96,8 +95,7 @@ final class WeWorkAppChannel extends BaseChannel
     private function getAccessToken(): string
     {
         $cache = $this->cache;
-        $cacheKey = ($this->config['access_token_cache_key'] ?: self::class);
-        $cacheKey = md5(serialize([$cacheKey, $this->config['corpid'], $this->config['corpsecret'], 'v1']));
+        $cacheKey = md5(serialize([self::class, $this->config['corpid'], $this->config['corpsecret'], 'v1']));
 
         $accessToken = $cache->get($cacheKey);
         if (!$accessToken) {
