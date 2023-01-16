@@ -18,8 +18,8 @@ abstract class BaseChannel
         $this->config = array_merge_recursive([
             'rate_limit' => [
                 'key' => '',
-                'maxAttempts' => 0,
-                'decaySeconds' => 0,
+                'maxAttempts' => 1,
+                'decaySeconds' => 60,
             ],
         ], $this->config);
     }
