@@ -12,7 +12,6 @@ abstract class BaseChannel
 {
     protected array $config = [];
     private ?Factory $factory = null;
-    private ?RateLimiter $rateLimiter = null;
 
     public function __construct()
     {
@@ -37,29 +36,22 @@ abstract class BaseChannel
         return $this;
     }
 
-    final public function withRateLimit(string $key, int $maxAttempts, int $decaySeconds): self
+    final public function withRateLimit(array $config = []): self
     {
-        $this->rateLimiter = $this->factory->getContainer()
-            ->make(RateLimiter::class)
-            ->withConfig([
-                'key' => $key,
-                'maxAttempts' => $maxAttempts,
-                'decaySeconds' => $decaySeconds,
-            ]);
+        $this->config['rate_limit'] = array_merge($this->config['rate_limit'], $config);
         return $this;
     }
 
     final protected function wrapSendCallback(Closure $send)
     {
-        if (!$this->rateLimiter && $this->config['rate_limit']['key']) {
+        $rateLimiter = null;
+        if ($this->config['rate_limit']['key']) {
             // 存在默认的限流器
-            $this->withRateLimit(
-                $this->config['rate_limit']['key'],
-                $this->config['rate_limit']['maxAttempts'],
-                $this->config['rate_limit']['decaySeconds'],
-            );
+            $rateLimiter = $this->factory->getContainer()
+                ->make(RateLimiter::class)
+                ->withConfig($this->config['rate_limit']);
         }
-        if ($this->rateLimiter && !$this->rateLimiter->attempt()) {
+        if ($rateLimiter && !$rateLimiter->attempt()) {
             return new RateLimitReachException();
         }
 
