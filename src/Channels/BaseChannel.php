@@ -44,6 +44,11 @@ abstract class BaseChannel
         return $this;
     }
 
+    final protected function make(string $abstract, array $parameters = [])
+    {
+        return $this->factory->getContainer()->make($abstract, $parameters);
+    }
+
     final protected function wrapSendCallback(Closure $send)
     {
         if (!$this->config['enable']) {
@@ -53,7 +58,7 @@ abstract class BaseChannel
         $rateLimiter = null;
         if ($this->config['rate_limit']['key']) {
             // 存在默认的限流器
-            $rateLimiter = $this->factory->getContainer()
+            $rateLimiter = $this
                 ->make(RateLimiter::class)
                 ->withConfig($this->config['rate_limit']);
         }

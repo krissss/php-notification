@@ -2,7 +2,9 @@
 
 namespace Kriss\Notification\Channels;
 
+use Kriss\Notification\Channels\Traits\TemplateSupport;
 use Kriss\Notification\Services\HttpClient;
+use Kriss\Notification\Templates\BaseTemplate;
 
 /**
  * 企业微信群机器人
@@ -10,6 +12,8 @@ use Kriss\Notification\Services\HttpClient;
  */
 class WeWorkBotChannel extends BaseChannel
 {
+    use TemplateSupport;
+
     protected array $config = [
         'key' => '', // webhook 的 key
         'mentioned_list' => [], // @userid
@@ -67,6 +71,14 @@ class WeWorkBotChannel extends BaseChannel
         ];
 
         return $this->send($params);
+    }
+
+    public function sendTemplate(BaseTemplate $template)
+    {
+        if ($template->getUseMarkdown()) {
+            return $this->sendMarkdown($template);
+        }
+        return $this->sendText($template);
     }
 
     private function send(array $params)

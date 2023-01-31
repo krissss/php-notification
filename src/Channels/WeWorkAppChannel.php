@@ -2,10 +2,12 @@
 
 namespace Kriss\Notification\Channels;
 
+use Kriss\Notification\Channels\Traits\TemplateSupport;
 use Kriss\Notification\Exceptions\AccessTokenGetException;
 use Kriss\Notification\Helper\JsonHelper;
 use Kriss\Notification\Services\Cache;
 use Kriss\Notification\Services\HttpClient;
+use Kriss\Notification\Templates\BaseTemplate;
 
 /**
  * 企业微信内部应用
@@ -13,6 +15,8 @@ use Kriss\Notification\Services\HttpClient;
  */
 final class WeWorkAppChannel extends BaseChannel
 {
+    use TemplateSupport;
+
     protected array $config = [
         'corpid' => '', // 企业 id
         'corpsecret' => '', // 应用 secret
@@ -78,6 +82,14 @@ final class WeWorkAppChannel extends BaseChannel
         );
 
         return $this->send($params);
+    }
+
+    public function sendTemplate(BaseTemplate $template)
+    {
+        if ($template->getUseMarkdown()) {
+            return $this->sendMarkdown($template);
+        }
+        return $this->sendText($template);
     }
 
     private function send(array $params)
