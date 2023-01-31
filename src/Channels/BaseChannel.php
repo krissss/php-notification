@@ -3,6 +3,7 @@
 namespace Kriss\Notification\Channels;
 
 use Closure;
+use Kriss\Notification\Exceptions\ChannelNotEnableException;
 use Kriss\Notification\Exceptions\RateLimitReachException;
 use Kriss\Notification\Factory;
 use Kriss\Notification\Services\RateLimiter;
@@ -16,6 +17,7 @@ abstract class BaseChannel
     public function __construct()
     {
         $this->config = array_merge_recursive([
+            'enable' => true,
             'rate_limit' => [
                 'key' => '',
                 'maxAttempts' => 1,
@@ -44,6 +46,10 @@ abstract class BaseChannel
 
     final protected function wrapSendCallback(Closure $send)
     {
+        if (!$this->config['enable']) {
+            return new ChannelNotEnableException();
+        }
+
         $rateLimiter = null;
         if ($this->config['rate_limit']['key']) {
             // 存在默认的限流器
