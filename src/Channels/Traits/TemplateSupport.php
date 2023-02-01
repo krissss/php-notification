@@ -13,17 +13,19 @@ trait TemplateSupport
 
     public function sendInfos(array $infos, string $title = '')
     {
+        /** @var InfosTemplate $template */
         $template = $this->make(InfosTemplate::class, [
             'attributes' => [
                 'title' => $title,
                 'infos' => $infos,
             ],
         ]);
-        return $this->sendTemplate($template);
+        return $this->sendTemplate($template->withFactory($this->factory));
     }
 
     public function sendException(Throwable $e, string $title = '', array $infos = [])
     {
+        /** @var ExceptionTemplate $template */
         $template = $this->make(ExceptionTemplate::class, [
             'attributes' => [
                 'exception' => $e,
@@ -31,6 +33,6 @@ trait TemplateSupport
                 'infos' => $infos,
             ],
         ]);
-        return $this->sendTemplate($template);
+        return $this->sendTemplate($template->withFactory($this->factory));
     }
 }

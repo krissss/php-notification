@@ -17,6 +17,9 @@ final class Factory
             'handler' => null,
             'throw' => true,
         ],
+        'template' => [
+            'handler' => null,
+        ],
     ];
     private array $channels = [];
 
@@ -42,14 +45,30 @@ final class Factory
 
     public function handleException(Throwable $e): ?Throwable
     {
-        if ($this->config['exception']['handler'] instanceof Closure) {
-            return call_user_func($this->config['exception']['handler'], $e);
+        $handler = $this->config['exception']['handler'];
+        if ($handler instanceof Closure) {
+            return call_user_func($handler, $e);
+        }
+        if (class_exists($handler)) {
+            return new $handler($e);
         }
         if ($this->config['exception']['throw']) {
             throw $e;
         }
         $this->container->get(Logger::class)->error($e);
         return $e;
+    }
+
+    public function handleTemplate(Templates\BaseTemplate $template, Closure $basic)
+    {
+        $handler = $this->config['template']['handler'];
+        if ($handler instanceof Closure) {
+            return call_user_func($handler, $template, $basic);
+        }
+        if (class_exists($handler)) {
+            return new $handler($template, $basic);
+        }
+        return false;
     }
 
     private function createChannel(array $config): BaseChannel

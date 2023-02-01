@@ -2,7 +2,6 @@
 
 namespace Kriss\Notification\Channels;
 
-use Kriss\Notification\Channels\Traits\TemplateSupport;
 use Kriss\Notification\Templates\BaseTemplate;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
@@ -14,8 +13,6 @@ use Symfony\Component\Mime\Email;
  */
 final class MailerChannel extends BaseChannel
 {
-    use TemplateSupport;
-
     protected array $config = [
         'dsn' => '', // smtp://username:password@smtp.xxx.com:465
         'from' => '', // 发送人：xxx@xxx.com 或 [xxx@xxx.com, xxx@xxx.com]
@@ -76,7 +73,7 @@ final class MailerChannel extends BaseChannel
 
     public function sendTemplate(BaseTemplate $template)
     {
-        $template->setUseMarkdown(false);
+        $template->useMarkdown = false;
         return $this->sendText($template);
     }
 }

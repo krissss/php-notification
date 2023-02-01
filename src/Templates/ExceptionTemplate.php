@@ -6,9 +6,9 @@ use Throwable;
 
 class ExceptionTemplate extends InfosTemplate
 {
-    protected ?Throwable $exception = null;
+    public ?Throwable $exception = null;
 
-    public function __toString()
+    protected function toString(): string
     {
         if (!$this->exception) {
             return '';

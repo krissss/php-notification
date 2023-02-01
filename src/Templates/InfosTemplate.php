@@ -4,10 +4,10 @@ namespace Kriss\Notification\Templates;
 
 class InfosTemplate extends BaseTemplate
 {
-    protected string $title = '';
-    protected array $infos = [];
+    public string $title = '';
+    public array $infos = [];
 
-    public function __toString()
+    protected function toString(): string
     {
         $this->infos = array_filter($this->infos);
         if ($this->useMarkdown) {

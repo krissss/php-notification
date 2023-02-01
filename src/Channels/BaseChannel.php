@@ -3,6 +3,7 @@
 namespace Kriss\Notification\Channels;
 
 use Closure;
+use Kriss\Notification\Channels\Traits\TemplateSupport;
 use Kriss\Notification\Exceptions\ChannelNotEnableException;
 use Kriss\Notification\Exceptions\RateLimitReachException;
 use Kriss\Notification\Factory;
@@ -11,6 +12,8 @@ use Throwable;
 
 abstract class BaseChannel
 {
+    use TemplateSupport;
+
     protected array $config = [];
     private ?Factory $factory = null;
 

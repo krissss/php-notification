@@ -55,12 +55,22 @@ return [
     'exception' => [
         /**
          * 接管异常处理
-         * callable|null
+         * callable|null|className
          */
         'handler' => null,
         /**
          * 当 handler 为 null 时，是否抛出异常
          */
         'throw' => true,
+    ],
+    /**
+     * 模版相关
+     */
+    'template' => [
+        /**
+         * 统一处理模版的 toString
+         * callable|null|className
+         */
+        'handler' => null,
     ],
 ];

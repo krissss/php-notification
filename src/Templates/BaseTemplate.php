@@ -2,9 +2,12 @@
 
 namespace Kriss\Notification\Templates;
 
+use Kriss\Notification\Factory;
+
 abstract class BaseTemplate
 {
-    protected bool $useMarkdown = true;
+    public bool $useMarkdown = true;
+    private ?Factory $factory = null;
 
     public function __construct(array $attributes = [])
     {
@@ -15,16 +18,22 @@ abstract class BaseTemplate
         }
     }
 
-    abstract public function __toString();
-
-    public function getUseMarkdown(): bool
+    public function withFactory(Factory $factory): self
     {
-        return $this->useMarkdown;
-    }
-
-    public function setUseMarkdown(bool $is): self
-    {
-        $this->useMarkdown = $is;
+        $this->factory = $factory;
         return $this;
     }
+
+    public function __toString() {
+        $basic = fn() => $this->toString();
+        if ($this->factory) {
+            $result = $this->factory->handleTemplate($this, $basic);
+            if (is_string($result)) {
+                return $result;
+            }
+        }
+        return $basic();
+    }
+
+    abstract protected function toString(): string;
 }
