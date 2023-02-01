@@ -4,6 +4,7 @@ namespace Kriss\Notification;
 
 use Closure;
 use Kriss\Notification\Channels\BaseChannel;
+use Kriss\Notification\Helper\ClosureHelper;
 use Kriss\Notification\Services\Logger;
 use Throwable;
 
@@ -28,6 +29,10 @@ final class Factory
     {
         $this->container = $container ?? new Container();
         $this->config = array_merge($this->config, $config);
+
+        if ($channels = ClosureHelper::make($this->config['channels'])) {
+            $this->config['channels'] = $channels;
+        }
     }
 
     public function getContainer(): Container
@@ -47,11 +52,9 @@ final class Factory
     public function handleException(Throwable $e): ?Throwable
     {
         $handler = $this->config['exception']['handler'];
-        if ($handler instanceof Closure) {
-            return call_user_func($handler, $e);
-        }
-        if (class_exists($handler)) {
-            return (new $handler($e))();
+        $result = ClosureHelper::make($handler, null, $e);
+        if ($result !== null) {
+            return $result;
         }
         if ($this->config['exception']['throw']) {
             throw $e;
@@ -64,11 +67,9 @@ final class Factory
     {
         $handler = $this->config['template']['handler'];
         $extraInfo = $this->config['template']['extra_info'];
-        if ($handler instanceof Closure) {
-            return call_user_func($handler, $template, $toString, $extraInfo);
-        }
-        if (class_exists($handler)) {
-            return (new $handler($template, $toString, $extraInfo))();
+        $result = ClosureHelper::make($handler, '__DEFAULT_VALUE__', $template, $toString, $extraInfo);
+        if ($result !== '__DEFAULT_VALUE__') {
+            return $result;
         }
         return false;
     }

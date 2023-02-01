@@ -4,6 +4,7 @@ namespace Kriss\Notification\Integrations\PHP\TemplateHandler;
 
 use Closure;
 use Kriss\Notification\Helper\BackTrace;
+use Kriss\Notification\Helper\ClosureHelper;
 use Kriss\Notification\Templates\BaseTemplate;
 use Kriss\Notification\Templates\ExceptionTemplate;
 use Kriss\Notification\Templates\InfosTemplate;
@@ -69,8 +70,8 @@ class EnvTemplateHandler
     protected function getEnv(): string
     {
         if ($this->config['env']) {
-            if ($this->config['env'] instanceof Closure) {
-                return $this->config['env']();
+            if ($env = ClosureHelper::make($this->config['env'])) {
+                $this->config['env'] = $env;
             }
             return $this->config['env'];
         }
@@ -80,8 +81,8 @@ class EnvTemplateHandler
     protected function getUid(): string
     {
         if ($this->config['uid']) {
-            if ($this->config['uid'] instanceof Closure) {
-                return $this->config['uid']();
+            if ($env = ClosureHelper::make($this->config['uid'])) {
+                $this->config['uid'] = $env;
             }
             return $this->config['uid'];
         }

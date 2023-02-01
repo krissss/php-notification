@@ -4,6 +4,7 @@ namespace Kriss\Notification\Integrations\PHP;
 
 use Kriss\Notification\Container;
 use Kriss\Notification\Factory;
+use Kriss\Notification\Helper\ClosureHelper;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Psr\SimpleCache\CacheInterface;
@@ -44,14 +45,14 @@ class Notification
                 return new NullLogger();
             }
             if ($config['instance']) {
-                return call_user_func($config['instance']);
+                return ClosureHelper::make($config['instance']);
             }
             return static::getDefaultLogger($config['channel']);
         });
         $container->singleton(CacheInterface::class, function () use ($config): CacheInterface {
             $config = $config['cache'];
             if ($config['instance']) {
-                return call_user_func($config['instance']);
+                return ClosureHelper::make($config['instance']);
             }
             return static::getDefaultCache($config['driver']);
         });
