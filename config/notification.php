@@ -72,5 +72,9 @@ return [
          * callable|null|className
          */
         'handler' => null,
+        /**
+         * 用于 handler 的配置信息
+         */
+        'extra_info' => [],
     ],
 ];

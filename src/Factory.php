@@ -19,6 +19,7 @@ final class Factory
         ],
         'template' => [
             'handler' => null,
+            'extra_info' => [],
         ],
     ];
     private array $channels = [];
@@ -50,7 +51,7 @@ final class Factory
             return call_user_func($handler, $e);
         }
         if (class_exists($handler)) {
-            return new $handler($e);
+            return (new $handler($e))();
         }
         if ($this->config['exception']['throw']) {
             throw $e;
@@ -59,14 +60,15 @@ final class Factory
         return $e;
     }
 
-    public function handleTemplate(Templates\BaseTemplate $template, Closure $basic)
+    public function handleTemplate(Templates\BaseTemplate $template, Closure $toString)
     {
         $handler = $this->config['template']['handler'];
+        $extraInfo = $this->config['template']['extra_info'];
         if ($handler instanceof Closure) {
-            return call_user_func($handler, $template, $basic);
+            return call_user_func($handler, $template, $toString, $extraInfo);
         }
         if (class_exists($handler)) {
-            return new $handler($template, $basic);
+            return (new $handler($template, $toString, $extraInfo))();
         }
         return false;
     }
