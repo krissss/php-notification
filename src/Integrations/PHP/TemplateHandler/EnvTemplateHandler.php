@@ -60,7 +60,10 @@ class EnvTemplateHandler
 
     protected function getBackTrace(): BackTrace
     {
-        return new BackTrace(dirname(__DIR__, $this->config['back_trace_root_level']), $this->config['back_trace_ignore_paths']);
+        return new BackTrace(
+            dirname(__DIR__, $this->config['back_trace_root_level']) . DIRECTORY_SEPARATOR,
+            $this->config['back_trace_ignore_paths']
+        );
     }
 
     protected function getEnv(): string
