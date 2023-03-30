@@ -11,10 +11,10 @@ class ClosureHelper
         if ($callback instanceof Closure) {
             return call_user_func($callback, ...$args);
         }
-        if (class_exists($callback)) {
+        if (is_string($callback) && class_exists($callback)) {
             $obj = new $callback(...$args);
             return $obj();
         }
-        return $default;
+        return $callback ?: $default;
     }
 }

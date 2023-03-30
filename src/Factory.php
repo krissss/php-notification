@@ -30,7 +30,7 @@ final class Factory
         $this->container = $container ?? new Container();
         $this->config = array_merge($this->config, $config);
 
-        if ($channels = ClosureHelper::make($this->config['channels'])) {
+        if ($channels = ClosureHelper::make($this->config['channels'], [])) {
             $this->config['channels'] = $channels;
         }
     }
