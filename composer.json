@@ -14,12 +14,12 @@
     "php": ">=7.4",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "php-http/discovery": "^1.14",
-    "psr/container": "^1.0|^2.0",
-    "psr/http-client": "^1.0",
-    "psr/http-factory": "^1.0",
-    "psr/log": "^1.1",
-    "psr/simple-cache": "^1.0"
+    "php-http/discovery": ">=1.14",
+    "psr/container": ">=1.0",
+    "psr/http-client": ">=1.0",
+    "psr/http-factory": ">=1.0",
+    "psr/log": ">=1.1",
+    "psr/simple-cache": ">=1.0"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "^7.5",
@@ -37,7 +37,10 @@
     }
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
   },
   "extra": {
     "laravel": {
