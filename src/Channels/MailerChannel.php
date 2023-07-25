@@ -9,7 +9,7 @@ use Symfony\Component\Mime\Email;
 
 /**
  * 邮件
- * https://symfony.com/doc/current/mailer.html
+ * https://symfony.com/doc/current/mailer.html.
  */
 final class MailerChannel extends BaseChannel
 {
@@ -36,6 +36,7 @@ final class MailerChannel extends BaseChannel
         $email = (new Email())
             ->subject($subject)
             ->text($text);
+
         return $this->send($email);
     }
 
@@ -44,6 +45,7 @@ final class MailerChannel extends BaseChannel
         $email = (new Email())
             ->subject($subject)
             ->html($html);
+
         return $this->send($email);
     }
 
@@ -74,6 +76,7 @@ final class MailerChannel extends BaseChannel
     public function sendTemplate(BaseTemplate $template)
     {
         $template->useMarkdown = false;
+
         return $this->sendText($template);
     }
 }

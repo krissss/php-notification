@@ -5,7 +5,6 @@ namespace Kriss\Notification\Channels\Traits;
 use Kriss\Notification\Templates\BaseTemplate;
 use Kriss\Notification\Templates\ExceptionTemplate;
 use Kriss\Notification\Templates\InfosTemplate;
-use Throwable;
 
 trait TemplateSupport
 {
@@ -20,10 +19,11 @@ trait TemplateSupport
                 'infos' => $infos,
             ],
         ]);
+
         return $this->sendTemplate($template->withFactory($this->factory));
     }
 
-    public function sendException(Throwable $e, string $title = '', array $infos = [])
+    public function sendException(\Throwable $e, string $title = '', array $infos = [])
     {
         /** @var ExceptionTemplate $template */
         $template = $this->make(ExceptionTemplate::class, [
@@ -33,6 +33,7 @@ trait TemplateSupport
                 'infos' => $infos,
             ],
         ]);
+
         return $this->sendTemplate($template->withFactory($this->factory));
     }
 }

@@ -6,7 +6,7 @@ final class JsonHelper
 {
     public static function encode(array $value): string
     {
-        return json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return json_encode($value, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
     }
 
     public static function decode(string $json): array

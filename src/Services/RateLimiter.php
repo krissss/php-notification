@@ -19,21 +19,23 @@ final class RateLimiter
     public function withConfig(array $config): self
     {
         $this->config = $config;
+
         return $this;
     }
 
     public function attempt(): bool
     {
         if (!$this->config['key'] || !$this->config['maxAttempts'] || !$this->config['decaySeconds']) {
-            throw new \InvalidArgumentException(self::class . ' config error');
+            throw new \InvalidArgumentException(self::class.' config error');
         }
 
         $cacheKey = md5(serialize([self::class, $this->config['key']]));
-        $value = (int)$this->cache->get($cacheKey, 0);
+        $value = (int) $this->cache->get($cacheKey, 0);
         if ($value >= $this->config['maxAttempts']) {
             return false;
         }
         $this->cache->set($cacheKey, $value + 1, $this->config['decaySeconds']);
+
         return true;
     }
 }

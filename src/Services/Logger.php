@@ -31,10 +31,10 @@ final class Logger
             return;
         }
 
-        if (is_callable($message)) {
-            $message = call_user_func($message);
+        if (\is_callable($message)) {
+            $message = \call_user_func($message);
         }
-        if (is_array($message)) {
+        if (\is_array($message)) {
             $message = JsonHelper::encode($message);
         }
         $this->logger->log($level, $message, $context);

@@ -2,8 +2,6 @@
 
 namespace Kriss\Notification\Helper;
 
-use Throwable;
-
 class BackTrace
 {
     protected string $rootPath;
@@ -20,11 +18,12 @@ class BackTrace
 
     public function getTriggerFile(): string
     {
-        $trace = $this->getFirstProjectTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        $trace = $this->getFirstProjectTrace(debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS));
+
         return $this->formatOriginFileLine($trace['file'], $trace['line']);
     }
 
-    public function getTriggerFileFromException(Throwable $e): string
+    public function getTriggerFileFromException(\Throwable $e): string
     {
         $trace = $this->getFirstProjectTrace(array_merge(
             [
@@ -32,6 +31,7 @@ class BackTrace
             ],
             $e->getTrace()
         ));
+
         return $this->formatOriginFileLine($trace['file'], $trace['line']);
     }
 
@@ -42,25 +42,27 @@ class BackTrace
             if (!isset($item['file'])) {
                 continue;
             }
-            $file = str_replace(DIRECTORY_SEPARATOR, '/', $item['file']);
+            $file = str_replace(\DIRECTORY_SEPARATOR, '/', $item['file']);
             if (!$this->contains($file, $this->ignorePaths)) {
                 $value = $item;
                 break;
             }
         }
+
         return ['file' => $value['file'] ?? '[internal]', 'line' => $value['line'] ?? 0];
     }
 
     protected function formatOriginFileLine(string $filepath, int $line): string
     {
         $filepath = str_replace($this->rootPath, '', $filepath);
-        return str_replace(DIRECTORY_SEPARATOR, '/', $filepath) . ':' . $line;
+
+        return str_replace(\DIRECTORY_SEPARATOR, '/', $filepath).':'.$line;
     }
 
     private function contains($haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && mb_strpos($haystack, $needle) !== false) {
+            if ('' !== $needle && false !== mb_strpos($haystack, $needle)) {
                 return true;
             }
         }

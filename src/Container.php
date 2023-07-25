@@ -23,7 +23,7 @@ final class Container
      */
     public function __construct($container = null)
     {
-        if ($container === null) {
+        if (null === $container) {
             // 自动发现支持的 container
             if (class_exists(\Illuminate\Container\Container::class)) {
                 $container = \Illuminate\Container\Container::getInstance();
@@ -45,13 +45,13 @@ final class Container
     private function discoverHttpClient()
     {
         if (!$this->container->has(ClientInterface::class)) {
-            $this->container->singleton(ClientInterface::class, fn() => Psr18ClientDiscovery::find());
+            $this->container->singleton(ClientInterface::class, fn () => Psr18ClientDiscovery::find());
         }
         if (!$this->container->has(RequestFactoryInterface::class)) {
-            $this->container->singleton(RequestFactoryInterface::class, fn() => Psr17FactoryDiscovery::findRequestFactory());
+            $this->container->singleton(RequestFactoryInterface::class, fn () => Psr17FactoryDiscovery::findRequestFactory());
         }
         if (!$this->container->has(StreamFactoryInterface::class)) {
-            $this->container->singleton(StreamFactoryInterface::class, fn() => Psr17FactoryDiscovery::findStreamFactory());
+            $this->container->singleton(StreamFactoryInterface::class, fn () => Psr17FactoryDiscovery::findStreamFactory());
         }
     }
 }

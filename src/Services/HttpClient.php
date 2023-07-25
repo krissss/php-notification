@@ -17,12 +17,11 @@ final class HttpClient
     protected Logger $logger;
 
     public function __construct(
-        ClientInterface         $httpClient,
+        ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
-        StreamFactoryInterface  $streamFactory,
-        Logger                  $logger
-    )
-    {
+        StreamFactoryInterface $streamFactory,
+        Logger $logger
+    ) {
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
         $this->streamFactory = $streamFactory;
@@ -49,23 +48,23 @@ final class HttpClient
 
     private function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $this->logger->debug(fn() => [
+        $this->logger->debug(fn () => [
             'type' => 'request',
-            'url' => (string)$request->getUri(),
+            'url' => (string) $request->getUri(),
             'method' => $request->getMethod(),
             'headers' => $request->getHeaders(),
-            'body' => (string)$request->getBody(),
+            'body' => (string) $request->getBody(),
         ]);
 
         $start = microtime(true);
         $response = $this->httpClient->sendRequest($request);
 
-        $this->logger->debug(fn() => [
+        $this->logger->debug(fn () => [
             'type' => 'response',
             'ts' => round(microtime(true) - $start, 6),
             'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
-            'body' => (string)$response->getBody(),
+            'body' => (string) $response->getBody(),
         ]);
 
         return $response;

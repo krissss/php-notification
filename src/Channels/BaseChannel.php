@@ -2,13 +2,11 @@
 
 namespace Kriss\Notification\Channels;
 
-use Closure;
 use Kriss\Notification\Channels\Traits\TemplateSupport;
 use Kriss\Notification\Exceptions\ChannelNotEnableException;
 use Kriss\Notification\Exceptions\RateLimitReachException;
 use Kriss\Notification\Factory;
 use Kriss\Notification\Services\RateLimiter;
-use Throwable;
 
 abstract class BaseChannel
 {
@@ -32,18 +30,21 @@ abstract class BaseChannel
     final public function withConfig(array $config): self
     {
         $this->config = array_replace_recursive($this->config, $config);
+
         return $this;
     }
 
     final public function withFactory(Factory $factory): self
     {
         $this->factory = $factory;
+
         return $this;
     }
 
     final public function withRateLimit(array $config = []): self
     {
         $this->config['rate_limit'] = array_merge($this->config['rate_limit'], $config);
+
         return $this;
     }
 
@@ -52,7 +53,7 @@ abstract class BaseChannel
         return $this->factory->getContainer()->make($abstract, $parameters);
     }
 
-    final protected function wrapSendCallback(Closure $send)
+    final protected function wrapSendCallback(\Closure $send)
     {
         if (!$this->config['enable']) {
             return new ChannelNotEnableException();
@@ -70,8 +71,8 @@ abstract class BaseChannel
         }
 
         try {
-            return call_user_func($send);
-        } catch (Throwable $e) {
+            return \call_user_func($send);
+        } catch (\Throwable $e) {
             if ($this->factory) {
                 return $this->factory->handleException($e);
             }

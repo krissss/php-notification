@@ -17,6 +17,7 @@ class Notification extends \Kriss\Notification\Integrations\PHP\Notification
         if (!static::$_instance) {
             static::$_instance = static::createFactory();
         }
+
         return static::$_instance;
     }
 
@@ -30,6 +31,7 @@ class Notification extends \Kriss\Notification\Integrations\PHP\Notification
         if ($channel) {
             return Log::channel($channel);
         }
+
         return Log::channel();
     }
 

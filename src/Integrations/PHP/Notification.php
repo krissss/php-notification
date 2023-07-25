@@ -18,15 +18,17 @@ class Notification
         if (!static::$_instance) {
             static::$_instance = static::createFactory();
         }
+
         return static::$_instance;
     }
 
     protected static function createFactory(): Factory
     {
         $config = array_replace_recursive(
-            require __DIR__ . '/../../../config/notification.php',
+            require __DIR__.'/../../../config/notification.php',
             static::getLocalConfig(),
         );
+
         return new Factory(static::createContainer($config), $config);
     }
 
@@ -47,6 +49,7 @@ class Notification
             if ($config['instance']) {
                 return ClosureHelper::make($config['instance']);
             }
+
             return static::getDefaultLogger($config['channel']);
         });
         $container->singleton(CacheInterface::class, function () use ($config): CacheInterface {
@@ -54,6 +57,7 @@ class Notification
             if ($config['instance']) {
                 return ClosureHelper::make($config['instance']);
             }
+
             return static::getDefaultCache($config['driver']);
         });
 

@@ -2,11 +2,9 @@
 
 namespace Kriss\Notification;
 
-use Closure;
 use Kriss\Notification\Channels\BaseChannel;
 use Kriss\Notification\Helper\ClosureHelper;
 use Kriss\Notification\Services\Logger;
-use Throwable;
 
 final class Factory
 {
@@ -46,31 +44,34 @@ final class Factory
         if (isset($this->channels[$name])) {
             return $this->channels[$name];
         }
+
         return $this->channels[$name] = $this->createChannel($this->config['channels'][$name]);
     }
 
-    public function handleException(Throwable $e): ?Throwable
+    public function handleException(\Throwable $e): ?\Throwable
     {
         $handler = $this->config['exception']['handler'];
         $result = ClosureHelper::make($handler, null, $e);
-        if ($result !== null) {
+        if (null !== $result) {
             return $result;
         }
         if ($this->config['exception']['throw']) {
             throw $e;
         }
         $this->container->get(Logger::class)->error($e);
+
         return $e;
     }
 
-    public function handleTemplate(Templates\BaseTemplate $template, Closure $toString)
+    public function handleTemplate(Templates\BaseTemplate $template, \Closure $toString)
     {
         $handler = $this->config['template']['handler'];
         $extraInfo = $this->config['template']['extra_info'];
         $result = ClosureHelper::make($handler, '__DEFAULT_VALUE__', $template, $toString, $extraInfo);
-        if ($result !== '__DEFAULT_VALUE__') {
+        if ('__DEFAULT_VALUE__' !== $result) {
             return $result;
         }
+
         return false;
     }
 
@@ -85,6 +86,7 @@ final class Factory
         if (!$obj instanceof BaseChannel) {
             throw new \InvalidArgumentException('必须是 BaseChannel');
         }
+
         return $obj
             ->withConfig($config)
             ->withFactory($this);

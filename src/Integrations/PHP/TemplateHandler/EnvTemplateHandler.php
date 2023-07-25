@@ -2,7 +2,6 @@
 
 namespace Kriss\Notification\Integrations\PHP\TemplateHandler;
 
-use Closure;
 use Kriss\Notification\Helper\BackTrace;
 use Kriss\Notification\Helper\ClosureHelper;
 use Kriss\Notification\Templates\BaseTemplate;
@@ -12,7 +11,7 @@ use Kriss\Notification\Templates\InfosTemplate;
 class EnvTemplateHandler
 {
     protected BaseTemplate $template;
-    protected Closure $toString;
+    protected \Closure $toString;
     protected array $config = [
         'back_trace_root_level' => 7,
         'back_trace_ignore_paths' => [],
@@ -20,7 +19,7 @@ class EnvTemplateHandler
         'uid' => null,
     ];
 
-    public function __construct(BaseTemplate $template, Closure $toString, array $config = [])
+    public function __construct(BaseTemplate $template, \Closure $toString, array $config = [])
     {
         $this->template = $template;
         $this->toString = $toString;
@@ -62,7 +61,7 @@ class EnvTemplateHandler
     protected function getBackTrace(): BackTrace
     {
         return new BackTrace(
-            dirname(__DIR__, $this->config['back_trace_root_level']) . DIRECTORY_SEPARATOR,
+            \dirname(__DIR__, $this->config['back_trace_root_level']).\DIRECTORY_SEPARATOR,
             $this->config['back_trace_ignore_paths']
         );
     }
@@ -73,8 +72,10 @@ class EnvTemplateHandler
             if ($env = ClosureHelper::make($this->config['env'])) {
                 $this->config['env'] = $env;
             }
+
             return $this->config['env'];
         }
+
         return $_SERVER['HTTP_HOST'];
     }
 
@@ -84,8 +85,10 @@ class EnvTemplateHandler
             if ($env = ClosureHelper::make($this->config['uid'])) {
                 $this->config['uid'] = $env;
             }
+
             return $this->config['uid'];
         }
+
         return '';
     }
 }

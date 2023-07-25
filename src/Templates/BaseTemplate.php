@@ -21,17 +21,20 @@ abstract class BaseTemplate
     public function withFactory(Factory $factory): self
     {
         $this->factory = $factory;
+
         return $this;
     }
 
-    public function __toString() {
-        $basic = fn() => $this->toString();
+    public function __toString()
+    {
+        $basic = fn () => $this->toString();
         if ($this->factory) {
             $result = $this->factory->handleTemplate($this, $basic);
-            if (is_string($result)) {
+            if (\is_string($result)) {
                 return $result;
             }
         }
+
         return $basic();
     }
 

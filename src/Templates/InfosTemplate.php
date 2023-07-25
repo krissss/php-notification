@@ -13,7 +13,7 @@ class InfosTemplate extends BaseTemplate
         if ($this->useMarkdown) {
             $texts = [];
             if ($this->title) {
-                $texts[] = '### ' . $this->title;
+                $texts[] = '### '.$this->title;
             }
             foreach ($this->infos as $key => $value) {
                 $texts[] = "- **{$key}**: {$value}";

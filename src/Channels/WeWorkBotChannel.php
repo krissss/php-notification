@@ -6,8 +6,9 @@ use Kriss\Notification\Services\HttpClient;
 use Kriss\Notification\Templates\BaseTemplate;
 
 /**
- * 企业微信群机器人
- * @link https://developer.work.weixin.qq.com/document/path/91770
+ * 企业微信群机器人.
+ *
+ * @see https://developer.work.weixin.qq.com/document/path/91770
  */
 class WeWorkBotChannel extends BaseChannel
 {
@@ -28,8 +29,8 @@ class WeWorkBotChannel extends BaseChannel
     public function sendText(string $content, array $config = [])
     {
         $config = array_merge([
-            'mentioned_list' => (array)$this->config['mentioned_list'],
-            'mentioned_mobile_list' => (array)$this->config['mentioned_mobile_list'],
+            'mentioned_list' => (array) $this->config['mentioned_list'],
+            'mentioned_mobile_list' => (array) $this->config['mentioned_mobile_list'],
         ], $config);
 
         $params = [
@@ -51,13 +52,13 @@ class WeWorkBotChannel extends BaseChannel
     public function sendMarkdown(string $content, array $config = [])
     {
         $config = array_merge([
-            'mentioned_list' => (array)$this->config['mentioned_list'],
+            'mentioned_list' => (array) $this->config['mentioned_list'],
         ], $config);
 
         if ($config['mentioned_list']) {
-            $content = implode('', array_map(fn(string $userid) => "<@{$userid}>", $config['mentioned_list']))
-                . "\n"
-                . $content;
+            $content = implode('', array_map(fn (string $userid) => "<@{$userid}>", $config['mentioned_list']))
+                ."\n"
+                .$content;
         }
 
         $params = [
@@ -75,6 +76,7 @@ class WeWorkBotChannel extends BaseChannel
         if ($template->useMarkdown) {
             return $this->sendMarkdown($template);
         }
+
         return $this->sendText($template);
     }
 

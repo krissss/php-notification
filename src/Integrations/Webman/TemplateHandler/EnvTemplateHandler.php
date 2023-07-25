@@ -6,6 +6,6 @@ class EnvTemplateHandler extends \Kriss\Notification\Integrations\PHP\TemplateHa
 {
     protected function getEnv(): string
     {
-        return config('app.name') . (config('app.debug') ? '(debug)' : '');
+        return config('app.name').(config('app.debug') ? '(debug)' : '');
     }
 }

@@ -9,8 +9,9 @@ use Kriss\Notification\Services\HttpClient;
 use Kriss\Notification\Templates\BaseTemplate;
 
 /**
- * 企业微信内部应用
- * @link https://developer.work.weixin.qq.com/document/path/90236
+ * 企业微信内部应用.
+ *
+ * @see https://developer.work.weixin.qq.com/document/path/90236
  */
 final class WeWorkAppChannel extends BaseChannel
 {
@@ -48,7 +49,7 @@ final class WeWorkAppChannel extends BaseChannel
             $config,
             [
                 'msgtype' => 'text',
-                'agentid' => (int)$this->config['agentid'],
+                'agentid' => (int) $this->config['agentid'],
                 'text' => [
                     'content' => $content,
                 ],
@@ -71,7 +72,7 @@ final class WeWorkAppChannel extends BaseChannel
             $config,
             [
                 'msgtype' => 'markdown',
-                'agentid' => (int)$this->config['agentid'],
+                'agentid' => (int) $this->config['agentid'],
                 'markdown' => [
                     'content' => $content,
                 ],
@@ -86,6 +87,7 @@ final class WeWorkAppChannel extends BaseChannel
         if ($template->useMarkdown) {
             return $this->sendMarkdown($template);
         }
+
         return $this->sendText($template);
     }
 
@@ -100,8 +102,7 @@ final class WeWorkAppChannel extends BaseChannel
     }
 
     /**
-     * @link https://developer.work.weixin.qq.com/document/path/91039
-     * @return string
+     * @see https://developer.work.weixin.qq.com/document/path/91039
      */
     private function getAccessToken(): string
     {
@@ -112,7 +113,7 @@ final class WeWorkAppChannel extends BaseChannel
         if (!$accessToken) {
             $response = $this->httpClient->requestGet("https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={$this->config['corpid']}&corpsecret={$this->config['corpsecret']}");
             $data = JsonHelper::decode($response->getBody());
-            if ($data['errcode'] !== 0) {
+            if (0 !== $data['errcode']) {
                 throw new AccessTokenGetException($data['errmsg']);
             }
             $accessToken = $data['access_token'];
