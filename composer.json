@@ -22,6 +22,7 @@
     "psr/simple-cache": ">=1.0"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.22",
     "guzzlehttp/guzzle": "^7.5",
     "illuminate/container": "^8.83",
     "illuminate/support": "^8.83",
@@ -35,6 +36,9 @@
     "psr-4": {
       "Kriss\\Notification\\": "src/"
     }
+  },
+  "scripts": {
+    "fixer:lint": "php-cs-fixer fix --config .php-cs-fixer.dist.php"
   },
   "config": {
     "sort-packages": true,

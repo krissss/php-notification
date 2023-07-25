@@ -3,3 +3,5 @@
 .vscode
 /runtime/
 /composer.lock
+node_modules
+.php-cs-fixer.cache
