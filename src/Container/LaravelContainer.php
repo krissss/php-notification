@@ -18,12 +18,12 @@ final class LaravelContainer implements ContainerInterface
         $this->container->singleton($abstract, $concrete);
     }
 
-    public function get($id)
+    public function get(string $id)
     {
         return $this->container->get($id);
     }
 
-    public function has($id)
+    public function has(string $id): bool
     {
         return $this->container->has($id);
     }
