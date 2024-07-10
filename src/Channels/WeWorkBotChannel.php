@@ -2,6 +2,7 @@
 
 namespace Kriss\Notification\Channels;
 
+use Kriss\Notification\Channels\Traits\ContentCutTrait;
 use Kriss\Notification\Services\HttpClient;
 use Kriss\Notification\Templates\BaseTemplate;
 
@@ -12,10 +13,15 @@ use Kriss\Notification\Templates\BaseTemplate;
  */
 class WeWorkBotChannel extends BaseChannel
 {
+    use ContentCutTrait;
+
     protected array $config = [
         'key' => '', // webhook 的 key
         'mentioned_list' => [], // @userid
         'mentioned_mobile_list' => [], // @mobile
+        'disable_auto_cut_content' => false,// 关闭裁剪
+        'text_content_limit' => 2048,// 文本消息内容限制长度,企业微信现在要求是2048
+        'markdown_content_limit' => 4096,// markdown消息限制长度,企业微信目前要求是4096
     ];
     private HttpClient $httpClient;
 
@@ -36,7 +42,7 @@ class WeWorkBotChannel extends BaseChannel
         $params = [
             'msgtype' => 'text',
             'text' => [
-                'content' => $content,
+                'content' => $this->cutContent($content, $this->config['text_content_limit']),
             ],
         ];
         if ($config['mentioned_list']) {
@@ -64,7 +70,7 @@ class WeWorkBotChannel extends BaseChannel
         $params = [
             'msgtype' => 'markdown',
             'markdown' => [
-                'content' => $content,
+                'content' => $this->cutContent($content, $this->config['markdown_content_limit']),
             ],
         ];
 
@@ -88,5 +94,10 @@ class WeWorkBotChannel extends BaseChannel
                 array_filter($params)
             );
         });
+    }
+
+    protected function disableContentCut(): bool
+    {
+        return $this->config['disable_auto_cut_content'];
     }
 }
