@@ -2,6 +2,7 @@
 
 namespace Kriss\Notification\Channels;
 
+use Kriss\Notification\Channels\Traits\ContentCutTrait;
 use Kriss\Notification\Exceptions\AccessTokenGetException;
 use Kriss\Notification\Helper\JsonHelper;
 use Kriss\Notification\Services\Cache;
@@ -15,6 +16,8 @@ use Kriss\Notification\Templates\BaseTemplate;
  */
 final class WeWorkAppChannel extends BaseChannel
 {
+    use ContentCutTrait;
+
     protected array $config = [
         'corpid' => '', // 企业 id
         'corpsecret' => '', // 应用 secret
@@ -22,6 +25,9 @@ final class WeWorkAppChannel extends BaseChannel
         'touser' => null, // 指定接收消息的成员，成员ID列表（多个接收者用‘|’分隔，最多支持1000个）
         'toparty' => null, // 指定接收消息的部门，部门ID列表，多个接收者用‘|’分隔，最多支持100个
         'totag' => null, //	指定接收消息的标签，标签ID列表，多个接收者用‘|’分隔，最多支持100个
+        'disable_auto_cut_content' => false,// 关闭裁剪
+        'text_content_limit' => 2048,// 文本消息内容限制长度,企业微信现在要求是2048
+        'markdown_content_limit' => 2048,// markdown消息限制长度,企业微信目前要求是2048
     ];
     private HttpClient $httpClient;
     private Cache $cache;
@@ -51,7 +57,7 @@ final class WeWorkAppChannel extends BaseChannel
                 'msgtype' => 'text',
                 'agentid' => (int) $this->config['agentid'],
                 'text' => [
-                    'content' => $content,
+                    'content' => $this->cutContent($content, $this->config['text_content_limit']),
                 ],
             ]
         );
@@ -74,7 +80,7 @@ final class WeWorkAppChannel extends BaseChannel
                 'msgtype' => 'markdown',
                 'agentid' => (int) $this->config['agentid'],
                 'markdown' => [
-                    'content' => $content,
+                    'content' => $this->cutContent($content, $this->config['text_content_limit']),
                 ],
             ]
         );
@@ -121,5 +127,10 @@ final class WeWorkAppChannel extends BaseChannel
         }
 
         return $accessToken;
+    }
+
+    protected function disableContentCut(): bool
+    {
+        return $this->config['disable_auto_cut_content'];
     }
 }
